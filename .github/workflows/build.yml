@@ -30,11 +30,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Download Gradle Wrapper JAR
+      - name: Regenerate Gradle Wrapper
         run: |
-          mkdir -p gradle/wrapper
-          curl -L --output gradle/wrapper/gradle-wrapper.jar \
-            "https://github.com/gradle/gradle/raw/v7.5.0/gradle/wrapper/gradle-wrapper.jar"
+          # Install Gradle 7.5 and regenerate the wrapper
+          wget -q https://services.gradle.org/distributions/gradle-7.5-bin.zip -O /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp/gradle-dist
+          /tmp/gradle-dist/gradle-7.5/bin/gradle wrapper --gradle-version 7.5 --distribution-type bin
           ls -lh gradle/wrapper/
 
       - name: Fix gradlew permissions
